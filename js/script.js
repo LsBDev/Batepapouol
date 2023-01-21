@@ -1,5 +1,8 @@
 const nomeUsuario = prompt("Qual seu nome?");
 let usuario = {name: nomeUsuario};
+let mensagens;
+let lastMessage;
+
 
 let resposta = axios.post('https://mock-api.driven.com.br/api/v6/uol/participants', usuario);
 
@@ -16,7 +19,7 @@ function naoLogado(off) {
   }
 }
 
-console.log(usuario);
+// console.log(usuario);
 
 setInterval(estaLogado, 4000);
 function estaLogado() {
@@ -30,54 +33,58 @@ function estaLogado() {
   );
 }
 
+let promise = axios.get('https://mock-api.driven.com.br/api/v6/uol/messages');
+promise.then(deuCerto, deuErro);
 
+function deuCerto(sucesso) {
+  mensagens = sucesso.data;
+  mostrarUltima();
+  setInterval(()=>{axios.get('https://mock-api.driven.com.br/api/v6/uol/messages').then(mostrarMensagens)}, 1000);
+}
+function deuErro(erro) {
+  console.log('erro ao pegar mensagens!');
+}
 
+//MOSTRAR MENSAGENS NA TELA.
+function mostrarMensagens(sucesso) {
+  mensagens = sucesso.data;
+  let indexLastMessage = mensagens.findIndex(function(obj){return obj.from == lastMessage.from && obj.to == lastMessage.to && obj.text == lastMessage.text && obj.type == lastMessage.type && obj.time == lastMessage.time});
+  let msg = document.querySelector('ul');
+  for (let i = indexLastMessage + 1; i < mensagens.length; i++) {
+    if(mensagens[i].type == 'status') {
+      let template = `<li data-test="message" class="status">(${mensagens[i].time})<span> ${mensagens[i].from}</span> ${mensagens[i].text} </li>`;
+      msg.innerHTML += template;
+    }else if(mensagens[i].type == 'message'){
+      let template = `<li data-test="message" class="message">(${mensagens[i].time})<span> ${mensagens[i].from}</span> para <span>${mensagens[i].to}</span>: ${mensagens[i].text} </li>`;
+      msg.innerHTML += template;
 
+    }
+  }
+  lastMessage = mensagens[mensagens.length - 1];
+  
 
+}
 
+function mostrarUltima() {
+  lastMessage = mensagens[mensagens.length - 1];
+  let msg = document.querySelector('ul');
+  // msg.innerHTML = '';  
+  let template = `<li data-test="message"><span>${lastMessage.from}</span> ${lastMessage.text} </li>`;
+  msg.innerHTML += template;
+}
 
+//ENVIANDO MENSAGENS PARA O ARRAY DE MENSAGENS.
+function enviarMensagem() {
+  let text = document.querySelector('input').value;
+  let novaMensagem = {
+    from: nomeUsuario,
+    to: "Todos",
+    text: text,
+    type: "message"
+  }
+  axios.post('https://mock-api.driven.com.br/api/v6/uol/messages', novaMensagem);
 
-
-// let mensagens = [];
-
-
-// let promise = axios.get('https://mock-api.driven.com.br/api/v6/uol/messages');
-// console.log(promise);
-// promise.then(deuCerto, deuErro);
-
-
-// function deuCerto(sucesso) {
-//   mensagens.push(sucesso.data);
-// }
-// function deuErro(erro) {
-//   console.log('Deu erro aqui!');
-// }
-
-
-// //MOSTRAR MENSAGENS NA TELA.
-// function mostrarMensagens() {
-//   let msg = document.querySelector('ul');
-//   msg.innerHTML = '';
-//   for (let i = 0; i < mensagens.length; i++) {
-//     let template = `<li data-test="message"> ${mensagens[0][i].text} </li>`;
-//     msg.innerHTML += template; 
-//   }
-
-// }
-// mostrarMensagens();
-
-// //ENVIANDO MENSAGENS PARA O ARRAY DE MENSAGENS.
-// function enviarMensagem() {
-//   let text = document.querySelector('input').value;
-
-//   let novaMensagem = {
-//     from: nomeUsuario,
-//     text: text,
-//     time: "09:13:59",
-//     to: "Todos",
-//     type: "status"
-//   }
-//   mensagens.push(novaMensagem);
+}
 
 // ENVIANDO MENSAGENS PARA O SERVIDOR
 // let resposta = axios.post('https://mock-api.driven.com.br/api/v6/uol/messages',mensagens); //objeto nova mensagem.
@@ -89,6 +96,6 @@ function estaLogado() {
 //   console.log('deu errado');
 // }
 
-// }
+
 
 

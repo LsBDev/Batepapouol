@@ -27,6 +27,7 @@ header {
 }
 main {
   margin-top: 96px;
+  margin-bottom: 96px;
   max-width: 385px;
   min-width: 300px;
   background: #E5E5E5;
@@ -75,4 +76,13 @@ footer {
   ion-icon {
     font-size: 30px;
   }
+}
+span {
+  font-weight: bold;
+}
+.status {
+  background: #DCDCDC;
+}
+.message {
+  background: white;
 }
