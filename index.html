@@ -5,8 +5,6 @@
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <link rel="stylesheet" href="/css/style.css">
-  <script src="/js/script.js" defer></script>
-  <script src="https://unpkg.com/ionicons@5.4.0/dist/ionicons.js"></script>
   <title>Bate Papo UOL</title>
 </head>
 <body>
@@ -16,33 +14,16 @@
   </header>
   <main>
     <ul>
-      <li data-test="message">nome (negrito) entra na sala...</l1>
-      <li>nome (negrito) sai na sala...</l1>
-      <li>conversas inseridas por js Lorem, ipsum dolor sit amet consectetur adipisicing elit. Autem blanditiis magni et excepturi necessitatibus, eum facilis inventore aliquid nisi quo doloremque repellendus, harum enim vel quaerat esse praesentium aliquam. Ut.</l1>
-      <li>conversas inseridas por js</l1>
-      <li>conversas inseridas por js</l1>
-      <li>conversas inseridas por js</l1>
-      <li>conversas inseridas por js</l1>
-      <li>conversas inseridas por js</l1>
-      <li>conversas inseridas por js</l1>
-      <li>conversas inseridas por js</l1>
-      <li>conversas inseridas por js</l1>
-      <li>conversas inseridas por js</l1>
-      <li>conversas inseridas por js</l1>
-      <li>conversas inseridas por js</l1>
-      <li>conversas inseridas por js</l1>
-      <li>conversas inseridas por js</l1>
-      <li>conversas inseridas por js</l1>
-      <li>conversas inseridas por js</l1>
-      <li>conversas inseridas por js</l1>
     </ul>
   </main>
   <footer>
     <input data-test="input-message" type="text" placeholder="Escreva aqui...">
-    <button data-test="send-message">
-      <ion-icon name="paper-plane-outline"></ion-icon>
-    </button>
+    <button data-test="send-message" onclick="enviarMensagem()">
+    <ion-icon name="paper-plane-outline"></ion-icon>
+  </button>
   </footer>
-  
+  <script src="https://unpkg.com/ionicons@5.4.0/dist/ionicons.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+  <script src="/js/script.js"></script>
 </body>
 </html>

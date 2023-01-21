@@ -67,12 +67,12 @@ footer input {
   line-height: 20px;
   border: none;
   font-style: italic;
-  color: black;
   outline: none;
 }
 footer button {
   border: none;
   margin-right: 5px;
+  background: white;
 }
 footer ion-icon {
   font-size: 30px;
