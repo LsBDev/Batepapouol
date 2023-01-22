@@ -1,6 +1,5 @@
 const nomeUsuario = prompt("Qual seu nome?");
 let usuario = {name: nomeUsuario};
-let mensagens;
 let lastMessage;
 
 //REQUISIÇÃO PARA ENVIO DO NOME DE USUÁRIO.
@@ -27,7 +26,7 @@ function naoLogado(off) {
 function estaLogado() {
   axios.post('https://mock-api.driven.com.br/api/v6/uol/status', usuario).then(
   () => {
-    console.log('continuo logado!');
+    // console.log('continuo logado!');
   }, 
   () => {
     console.log('Deu Ruim');
@@ -46,19 +45,17 @@ function getMensagens() {
 
 //MOSTRAR MENSAGENS NA TELA.
 function mostrarMensagens(sucesso) {
-  mensagens = sucesso.data;
+  let mensagens = sucesso.data;
   let msg = document.querySelector('ul');
   msg.innerHTML = '';
   for (let i = 0; i < mensagens.length; i++) {
     if(mensagens[i].type == 'status') {
       let template =
-        `
-        <li data-test="message" class="status">
+        `<li data-test="message" class="status">
         <span>(${mensagens[i].time})</span>
-        <b> ${mensagens[i].from}</b>
+        <b>${mensagens[i].from}</b>
         ${mensagens[i].text}
-        </li>
-        `;
+        </li>`;
       msg.innerHTML += template;
 
     }else if(mensagens[i].type == 'message'){
@@ -66,10 +63,12 @@ function mostrarMensagens(sucesso) {
       msg.innerHTML += template;
 
     }else if(mensagens[i].type == "private_message" && (mensagens[i].to == nomeUsuario || mensagens[i].from == nomeUsuario)) {
-    let template = `<li data-test="message" class="private_message"><span>(${mensagens[i].time})</span><b> ${mensagens[i].from}</b> para <b>${mensagens[i].to}</b>: ${mensagens[i].text} </li>`;
+      let template = `<li data-test="message" class="private_message"><span>(${mensagens[i].time})</span><b> ${mensagens[i].from}</b> reservadamente para <b>${mensagens[i].to}</b>: ${mensagens[i].text} </li>`;
+      msg.innerHTML += template;
     }
   }
-  msg.lastChild.scrollIntoView();
+  msg = document.querySelector('ul');
+  msg.lastElementChild.scrollIntoView();
 }
 
 //ENVIANDO MENSAGENS PARA O SERVIDOR.
