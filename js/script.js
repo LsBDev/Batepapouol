@@ -4,17 +4,22 @@ let mensagens;
 let lastMessage;
 
 //REQUISIÇÃO PARA ENVIO DO NOME DE USUÁRIO.
-let resposta = axios.post('https://mock-api.driven.com.br/api/v6/uol/participants', usuario);
+let resposta = axios.post('https://mock-api.driven.com.br/api/v6/uol/participants',
+                          usuario,
+                          );
 resposta.then(logado, naoLogado);
 function logado() {
- setInterval(getMensagens, 3000);
+  setInterval(getMensagens, 3000);
   setInterval(estaLogado, 5000);
 }
 function naoLogado(off) {
   if(off.response.status == 400) {
     let usr = prompt('Nome já existe, por favor escolha outro.');
     usuario = {name: usr};
-    axios.post('https://mock-api.driven.com.br/api/v6/uol/participants', usuario).then(logado, naoLogado);
+    axios.post('https://mock-api.driven.com.br/api/v6/uol/participants', usuario)
+              .then(logado,
+                    naoLogado
+                  );
   }
 }
 
@@ -42,42 +47,30 @@ function getMensagens() {
 //MOSTRAR MENSAGENS NA TELA.
 function mostrarMensagens(sucesso) {
   mensagens = sucesso.data;
-  // let indexLastMessage = mensagens.findIndex(function(obj){return obj.from == lastMessage.from && obj.to == lastMessage.to && obj.text == lastMessage.text && obj.type == lastMessage.type && obj.time == lastMessage.time});
   let msg = document.querySelector('ul');
+  msg.innerHTML = '';
   for (let i = 0; i < mensagens.length; i++) {
     if(mensagens[i].type == 'status') {
-    let template = `<li data-test="message" class="status"><span>(${mensagens[i].time})</span><b> ${mensagens[i].from}</b> ${mensagens[i].text} </li>`;
-    msg.innerHTML += template;
+      let template =
+        `
+        <li data-test="message" class="status">
+        <span>(${mensagens[i].time})</span>
+        <b> ${mensagens[i].from}</b>
+        ${mensagens[i].text}
+        </li>
+        `;
+      msg.innerHTML += template;
+
     }else if(mensagens[i].type == 'message'){
-    let template = `<li data-test="message" class="message"><span>(${mensagens[i].time})</span><b> ${mensagens[i].from}</b> para <b>${mensagens[i].to}</b>: ${mensagens[i].text} </li>`;
-    msg.innerHTML += template;
+      let template = `<li data-test="message" class="message"><span>(${mensagens[i].time})</span><b> ${mensagens[i].from}</b> para <b>${mensagens[i].to}</b>: ${mensagens[i].text} </li>`;
+      msg.innerHTML += template;
+
     }else if(mensagens[i].type == "private_message" && (mensagens[i].to == nomeUsuario || mensagens[i].from == nomeUsuario)) {
     let template = `<li data-test="message" class="private_message"><span>(${mensagens[i].time})</span><b> ${mensagens[i].from}</b> para <b>${mensagens[i].to}</b>: ${mensagens[i].text} </li>`;
     }
   }
   msg.lastChild.scrollIntoView();
-  // lastMessage = mensagens[mensagens.length - 1];
 }
-
-
-// function mostrarUltima() {
-//   lastMessage = mensagens[mensagens.length - 1];
-//   let msg = document.querySelector('ul');
-//   if(lastMessage.type == 'status') {
-//     let template = `<li data-test="message" class="status"><span>(${lastMessage.time})</span><b> ${lastMessage.from}</b> ${lastMessage.text} </li>`;
-//     msg.innerHTML += template;
-//   }else if(lastMessage.type == 'message'){
-//     let template = `<li data-test="message" class="message"><span>(${lastMessage.time})</span><b> ${lastMessage.from}</b> para <b>${lastMessage.to}</b>: ${lastMessage.text} </li>`;
-//     msg.innerHTML += template;
-//   }
-//   else if(lastMessage.type == "private_message" && (lastMessage.to == nomeUsuario || lastMessage.from == nomeUsuario)) {
-//     let template = `<li data-test="message" class="private_message"><span>(${lastMessage.time})</span><b> ${lastMessage.from}</b> para <b>${lastMessage.to}</b>: ${lastMessage.text} </li>`;
-//   }
-// }
-
-
-/*COMO ROLAR A BARRA PRO FINAL?? const elementoQueQueroQueApareca = document.querySelector('.mensagem');
-elementoQueQueroQueApareca.scrollIntoView();*/
 
 //ENVIANDO MENSAGENS PARA O SERVIDOR.
 function enviarMensagem() {
@@ -88,8 +81,29 @@ function enviarMensagem() {
     text: text,
     type: "message"
   };
-  axios.post('https://mock-api.driven.com.br/api/v6/uol/messages', novaMensagem).then(()=>{mostrarMensagens}).catch(()=>{window.location.reload()}); //checar o envio vazio
+  axios.post('https://mock-api.driven.com.br/api/v6/uol/messages', novaMensagem).then(
+    ()=>{
+      getMensagens();
+    })
+    .catch(
+      (xabu)=>{
+        console.log(`Erro: ${xabu.status}`);
+        window.location.reload();
+
+    }); //checar o envio vazio
+
+
+  // axios.post('https://mock-api.driven.com.br/api/v6/uol/messages', novaMensagem).then(sucesso,erro);
+  // function sucesso(ok) {
+  //   getMensagens();
+  // }
+  // function erro(xabu) {
+  //   console.log(`Erro: ${xabu.status}`);
+  //   window.location.reload();
+  // }
+
   document.querySelector('.texto').value = '';
+ 
 }
 
 //ENVIAR COM O ENTER.
