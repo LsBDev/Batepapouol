@@ -30,7 +30,7 @@ main {
   margin-bottom: 96px;
   max-width: 385px;
   min-width: 300px;
-  background: #E5E5E5;
+  background: #f2f2f2;
   ul {
     list-style: none;
     li{
@@ -65,20 +65,22 @@ footer {
     line-height: 20px;
     border: none;
     font-style: italic;
-    // color: black;
     outline:none;
   }
   button {
     border: none;
     margin-right: 5px ;
     background: white;
+
   }
   ion-icon {
     font-size: 30px;
+    border: none;
+    background: white;
   }
 }
 span {
-  font-weight: bold;
+  color: #919090;
 }
 .status {
   background: #DCDCDC;

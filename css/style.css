@@ -31,7 +31,7 @@ main {
   margin-bottom: 96px;
   max-width: 385px;
   min-width: 300px;
-  background: #E5E5E5;
+  background: #f2f2f2;
 }
 main ul {
   list-style: none;
@@ -77,10 +77,12 @@ footer button {
 }
 footer ion-icon {
   font-size: 30px;
+  border: none;
+  background: white;
 }
 
 span {
-  font-weight: bold;
+  color: #919090;
 }
 
 .status {

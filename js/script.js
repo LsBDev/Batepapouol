@@ -16,6 +16,7 @@ function naoLogado(off) {
   }
 }
 
+//REENVIANDO O NOME PRA MANTER LOGADO.
 setInterval(estaLogado, 5000);
 function estaLogado() {
   axios.post('https://mock-api.driven.com.br/api/v6/uol/status', usuario).then(
@@ -27,6 +28,8 @@ function estaLogado() {
   }
   );
 }
+
+//PEGANDO MENSAGENS DO SERVIDOR. DA PROMISE O QUE INTERESSA É O .DATA.
 let promise = axios.get('https://mock-api.driven.com.br/api/v6/uol/messages');
 promise.then(deuCerto, deuErro);
 function deuCerto(sucesso) {
@@ -45,38 +48,51 @@ function mostrarMensagens(sucesso) {
   let msg = document.querySelector('ul');
   for (let i = indexLastMessage + 1; i < mensagens.length; i++) {
     if(mensagens[i].type == 'status') {
-      let template = `<li data-test="message" class="status">(${mensagens[i].time})<span> ${mensagens[i].from}</span> ${mensagens[i].text} </li>`;
+      let template = `<li data-test="message" class="status"><span>(${mensagens[i].time})</span><b> ${mensagens[i].from}</b> ${mensagens[i].text} </li>`;
       msg.innerHTML += template;
     }else if(mensagens[i].type == 'message'){
-      let template = `<li data-test="message" class="message">(${mensagens[i].time})<span> ${mensagens[i].from}</span> para <span>${mensagens[i].to}</span>: ${mensagens[i].text} </li>`;
+      let template = `<li data-test="message" class="message"><span>(${mensagens[i].time})</span><b> ${mensagens[i].from}</b> para <b>${mensagens[i].to}</b>: ${mensagens[i].text} </li>`;
       msg.innerHTML += template;
     }
+
   }
   lastMessage = mensagens[mensagens.length - 1];
 }
+
 function mostrarUltima() {
   lastMessage = mensagens[mensagens.length - 1];
   let msg = document.querySelector('ul');
   if(lastMessage.type == 'status') {
-    let template = `<li data-test="message" class="status">(${lastMessage.time})<span> ${lastMessage.from}</span> ${lastMessage.text} </li>`;
+    let template = `<li data-test="message" class="status"><span>(${lastMessage.time})</span><b> ${lastMessage.from}</b> ${lastMessage.text} </li>`;
     msg.innerHTML += template;
   }else if(lastMessage.type == 'message'){
-    let template = `<li data-test="message" class="message">(${lastMessage.time})<span> ${lastMessage.from}</span> para <span>${lastMessage.to}</span>: ${lastMessage.text} </li>`;
+    let template = `<li data-test="message" class="message"><span>(${lastMessage.time})</span><b> ${lastMessage.from}</b> para <b>${lastMessage.to}</b>: ${lastMessage.text} </li>`;
     msg.innerHTML += template;
   }
 }
 
-//ENVIANDO MENSAGENS PARA O ARRAY DE MENSAGENS.
+/*COMO ROLAR A BARRA PRO FINAL?? const elementoQueQueroQueApareca = document.querySelector('.mensagem');
+elementoQueQueroQueApareca.scrollIntoView();*/
+
+//ENVIANDO MENSAGENS PARA O SERVIDOR.
 function enviarMensagem() {
-  let text = document.querySelector('input').value;
+  let text = document.querySelector('.texto').value;
   let novaMensagem = {
     from: nomeUsuario,
     to: "Todos",
     text: text,
     type: "message"
-  }
+  };
   axios.post('https://mock-api.driven.com.br/api/v6/uol/messages', novaMensagem).then(()=>{mostrarMensagens}).catch(()=>{window.location.reload()});
+  document.querySelector('.texto').value = '';
 }
 
+document.addEventListener('keypress', function(e) {
+  if(e.key === 'Enter') {
+    document.querySelector('.btn').click();
+    document.querySelector('.texto').value = '';
+    
+  }
+});
 
 
