@@ -7,7 +7,7 @@ let lastMessage;
 let resposta = axios.post('https://mock-api.driven.com.br/api/v6/uol/participants', usuario);
 resposta.then(logado, naoLogado);
 function logado() {
-  getMensagens();
+ setInterval(getMensagens, 3000);
   setInterval(estaLogado, 5000);
 }
 function naoLogado(off) {
@@ -33,24 +33,18 @@ function estaLogado() {
 //PEGANDO MENSAGENS DO SERVIDOR. DA PROMISE O QUE INTERESSA É O .DATA.
 function getMensagens() {
   let promise = axios.get('https://mock-api.driven.com.br/api/v6/uol/messages');
-  promise.then(deuCerto, deuErro);
-  function deuCerto(sucesso) {
-    mensagens = sucesso.data;
-    mostrarUltima();
-    setInterval(()=>{axios.get('https://mock-api.driven.com.br/api/v6/uol/messages').then(mostrarMensagens)}, 3000);
-  }
-  function deuErro(erro) {
-    console.log('erro ao pegar mensagens!');
+  promise.then(mostrarMensagens, deuErroMensagens);
+  function deuErroMensagens(erro) {
+    console.log(`Erro ao pegar mensagens!Erro ${erro.status}`);
   }
 }
-
 
 //MOSTRAR MENSAGENS NA TELA.
 function mostrarMensagens(sucesso) {
   mensagens = sucesso.data;
-  let indexLastMessage = mensagens.findIndex(function(obj){return obj.from == lastMessage.from && obj.to == lastMessage.to && obj.text == lastMessage.text && obj.type == lastMessage.type && obj.time == lastMessage.time});
+  // let indexLastMessage = mensagens.findIndex(function(obj){return obj.from == lastMessage.from && obj.to == lastMessage.to && obj.text == lastMessage.text && obj.type == lastMessage.type && obj.time == lastMessage.time});
   let msg = document.querySelector('ul');
-  for (let i = indexLastMessage + 1; i < mensagens.length; i++) {
+  for (let i = 0; i < mensagens.length; i++) {
     if(mensagens[i].type == 'status') {
     let template = `<li data-test="message" class="status"><span>(${mensagens[i].time})</span><b> ${mensagens[i].from}</b> ${mensagens[i].text} </li>`;
     msg.innerHTML += template;
@@ -62,23 +56,25 @@ function mostrarMensagens(sucesso) {
     }
   }
   msg.lastChild.scrollIntoView();
-  lastMessage = mensagens[mensagens.length - 1];
+  // lastMessage = mensagens[mensagens.length - 1];
 }
 
-function mostrarUltima() {
-  lastMessage = mensagens[mensagens.length - 1];
-  let msg = document.querySelector('ul');
-  if(lastMessage.type == 'status') {
-    let template = `<li data-test="message" class="status"><span>(${lastMessage.time})</span><b> ${lastMessage.from}</b> ${lastMessage.text} </li>`;
-    msg.innerHTML += template;
-  }else if(lastMessage.type == 'message'){
-    let template = `<li data-test="message" class="message"><span>(${lastMessage.time})</span><b> ${lastMessage.from}</b> para <b>${lastMessage.to}</b>: ${lastMessage.text} </li>`;
-    msg.innerHTML += template;
-  }
-  else if(lastMessage.type == "private_message" && (lastMessage.to == nomeUsuario || lastMessage.from == nomeUsuario)) {
-    let template = `<li data-test="message" class="private_message"><span>(${lastMessage.time})</span><b> ${lastMessage.from}</b> para <b>${lastMessage.to}</b>: ${lastMessage.text} </li>`;
-  }
-}
+
+// function mostrarUltima() {
+//   lastMessage = mensagens[mensagens.length - 1];
+//   let msg = document.querySelector('ul');
+//   if(lastMessage.type == 'status') {
+//     let template = `<li data-test="message" class="status"><span>(${lastMessage.time})</span><b> ${lastMessage.from}</b> ${lastMessage.text} </li>`;
+//     msg.innerHTML += template;
+//   }else if(lastMessage.type == 'message'){
+//     let template = `<li data-test="message" class="message"><span>(${lastMessage.time})</span><b> ${lastMessage.from}</b> para <b>${lastMessage.to}</b>: ${lastMessage.text} </li>`;
+//     msg.innerHTML += template;
+//   }
+//   else if(lastMessage.type == "private_message" && (lastMessage.to == nomeUsuario || lastMessage.from == nomeUsuario)) {
+//     let template = `<li data-test="message" class="private_message"><span>(${lastMessage.time})</span><b> ${lastMessage.from}</b> para <b>${lastMessage.to}</b>: ${lastMessage.text} </li>`;
+//   }
+// }
+
 
 /*COMO ROLAR A BARRA PRO FINAL?? const elementoQueQueroQueApareca = document.querySelector('.mensagem');
 elementoQueQueroQueApareca.scrollIntoView();*/
