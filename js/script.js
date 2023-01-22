@@ -52,15 +52,16 @@ function mostrarMensagens(sucesso) {
   let msg = document.querySelector('ul');
   for (let i = indexLastMessage + 1; i < mensagens.length; i++) {
     if(mensagens[i].type == 'status') {
-      let template = `<li data-test="message" class="status"><span>(${mensagens[i].time})</span><b> ${mensagens[i].from}</b> ${mensagens[i].text} </li>`;
-      msg.innerHTML += template;
+    let template = `<li data-test="message" class="status"><span>(${mensagens[i].time})</span><b> ${mensagens[i].from}</b> ${mensagens[i].text} </li>`;
+    msg.innerHTML += template;
     }else if(mensagens[i].type == 'message'){
-      let template = `<li data-test="message" class="message"><span>(${mensagens[i].time})</span><b> ${mensagens[i].from}</b> para <b>${mensagens[i].to}</b>: ${mensagens[i].text} </li>`;
-      msg.innerHTML += template;
+    let template = `<li data-test="message" class="message"><span>(${mensagens[i].time})</span><b> ${mensagens[i].from}</b> para <b>${mensagens[i].to}</b>: ${mensagens[i].text} </li>`;
+    msg.innerHTML += template;
     }else if(mensagens[i].type == "private_message" && (mensagens[i].to == nomeUsuario || mensagens[i].from == nomeUsuario)) {
-      let template = `<li data-test="message" class="private_message"><span>(${mensagens[i].time})</span><b> ${mensagens[i].from}</b> para <b>${mensagens[i].to}</b>: ${mensagens[i].text} </li>`;
+    let template = `<li data-test="message" class="private_message"><span>(${mensagens[i].time})</span><b> ${mensagens[i].from}</b> para <b>${mensagens[i].to}</b>: ${mensagens[i].text} </li>`;
     }
   }
+  msg.lastChild.scrollIntoView();
   lastMessage = mensagens[mensagens.length - 1];
 }
 
