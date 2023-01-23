@@ -3,10 +3,9 @@ let usuario = {name: nomeUsuario};
 let lastMessage;
 
 //REQUISIÇÃO PARA ENVIO DO NOME DE USUÁRIO.
-let resposta = axios.post('https://mock-api.driven.com.br/api/v6/uol/participants',
-                          usuario,
-                          );
+let resposta = axios.post('https://mock-api.driven.com.br/api/v6/uol/participants', usuario);
 resposta.then(logado, naoLogado);
+
 function logado() {
   setInterval(getMensagens, 3000);
   setInterval(estaLogado, 5000);
@@ -16,15 +15,14 @@ function naoLogado(off) {
     let usr = prompt('Nome já existe, por favor escolha outro.');
     usuario = {name: usr};
     axios.post('https://mock-api.driven.com.br/api/v6/uol/participants', usuario)
-              .then(logado,
-                    naoLogado
-                  );
+    .then(logado,naoLogado);
   }
 }
 
 //REENVIANDO O NOME PRA MANTER LOGADO.
 function estaLogado() {
-  axios.post('https://mock-api.driven.com.br/api/v6/uol/status', usuario).then(
+  axios.post('https://mock-api.driven.com.br/api/v6/uol/status', usuario)
+  .then(
   () => {
     // console.log('continuo logado!');
   }, 
@@ -59,11 +57,23 @@ function mostrarMensagens(sucesso) {
       msg.innerHTML += template;
 
     }else if(mensagens[i].type == 'message'){
-      let template = `<li data-test="message" class="message"><span>(${mensagens[i].time})</span><b> ${mensagens[i].from}</b> para <b>${mensagens[i].to}</b>: ${mensagens[i].text} </li>`;
+      let template = 
+        `<li data-test="message" class="message">
+        <span>(${mensagens[i].time})</span>
+        <b> ${mensagens[i].from}</b> 
+        para <b>${mensagens[i].to}</b>: 
+        ${mensagens[i].text} 
+        </li>`;
       msg.innerHTML += template;
 
     }else if(mensagens[i].type == "private_message" && (mensagens[i].to == nomeUsuario || mensagens[i].from == nomeUsuario)) {
-      let template = `<li data-test="message" class="private_message"><span>(${mensagens[i].time})</span><b> ${mensagens[i].from}</b> reservadamente para <b>${mensagens[i].to}</b>: ${mensagens[i].text} </li>`;
+      let template = 
+        `<li data-test="message" class="private_message">
+        <span>(${mensagens[i].time})</span>
+        <b> ${mensagens[i].from}</b> 
+        reservadamente para <b>${mensagens[i].to}</b>: 
+        ${mensagens[i].text} 
+        </li>`;
       msg.innerHTML += template;
     }
   }
@@ -91,21 +101,19 @@ function enviarMensagem() {
 
     }); //checar o envio vazio
 
-
-  // axios.post('https://mock-api.driven.com.br/api/v6/uol/messages', novaMensagem).then(sucesso,erro);
-  // function sucesso(ok) {
-  //   getMensagens();
-  // }
-  // function erro(xabu) {
-  //   console.log(`Erro: ${xabu.status}`);
-  //   window.location.reload();
-  // }
+  /*axios.post('https://mock-api.driven.com.br/api/v6/uol/messages', novaMensagem).then(sucesso,erro);
+  function sucesso(ok) {
+    getMensagens();
+  }
+  function erro(xabu) {
+    console.log(`Erro: ${xabu.status}`);
+    window.location.reload();
+  }*/
 
   document.querySelector('.texto').value = '';
- 
 }
 
-//ENVIAR COM O ENTER.
+//ENVIAR MENSAGEM COM O ENTER.
 document.addEventListener('keypress', function(e) {
   if(e.key === 'Enter') {
     document.querySelector('.btn').click();
