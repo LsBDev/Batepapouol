@@ -1,13 +1,13 @@
 const nomeUsuario = prompt("Qual seu nome?");
 let usuario = {name: nomeUsuario};
-let lastMessage;
+// let lastMessage;
 
 //REQUISIÇÃO PARA ENVIO DO NOME DE USUÁRIO.
 let resposta = axios.post('https://mock-api.driven.com.br/api/v6/uol/participants', usuario);
 resposta.then(logado, naoLogado);
 
 function logado() {
-  setInterval(getMensagens, 3000);
+  setInterval(getMensagens, 3000); 
   setInterval(estaLogado, 5000);
 }
 function naoLogado(off) {
